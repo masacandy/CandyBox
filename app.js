@@ -24,28 +24,33 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 
-
+var xml;
 function songReq () {
+  //アクセスする
   http.get(url, function (res) {
+    //エンコーディング指定
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
-      console.log("chunk" + chunk);
-      var json = xml2json.toJson(chunk);
-      var nowPlaying = JSON.parse(json);
-      console.log(nowPlaying);
 
+      console.log(chunk);
 
+      var apiJson = xml2json.toJson(chunk);
+      var nowPlaying = JSON.parse(apiJson, 'utf-8');
 
-      var nowPlayingTitle = nowPlaying.status.source.title;
-      var currentTitle = playingData.status.source.title;
-      console.log(nowPlayingTitle == currentTitle);
+      if (nowPlaying.hasOwnProperty("status")) {
 
-      if(currentTitle != nowPlayingTitle){
-          fs.writeFile('playing.json', json);
-          console.log('saved');
+        var nowPlayingTitle = nowPlaying.status.source.title;
+        var currentTitle = playingData.status.source.title;
+
+        if(currentTitle != nowPlayingTitle){
+            fs.writeFile('playing.json', nowPlaying);
+            console.log('saved');
+          } else {
+            console.log("now playing is " + nowPlayingTitle);
+          };
         } else {
-          console.log(nowPlayingTitle);
-        };
+          console.log("currently there's no party")
+        }
       });
       res.on('end', function () {
       });
@@ -60,16 +65,8 @@ io.sockets.on('connection', function (socket) {
     socket.emit('message', { message: 'welcome to the chat'});
 
     fs.watchFile('./playing.json', function(curr, prev) {
-    // on file change we can read the new xml
-      fs.readFile('./playing.json', function(err, data) {
-        console.log(json);
-        if (err) throw err;
-        // parsing the new xml data and converting them into json file
-        var json = data;
-        console.log("are you here?" + json);
-        // send the new data to the client
-        socket.volatile.emit('notification', json);
-      });
+
+      socket.volatile.emit('notification', playingData);
     });
 
     socket.on('send', function (data) {
@@ -82,5 +79,5 @@ app.get('/', function(req, res) {
 });
 
 
-setInterval(songReq, 1000);
+setInterval(songReq, 2000);
 console.log("listening on port" + port);
