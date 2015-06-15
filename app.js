@@ -22,29 +22,37 @@ app.use(express.static(path.join(__dirname,'public')));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-console.log(playingData.status.source.title);
+
 
 
 function songReq () {
   http.get(url, function (res) {
-  // テキストファイルの場合は、エンコード指定は重要！
-  res.setEncoding('utf8');
-  res.on('data', function (chunk) {
-    var json = xml2json.toJson(chunk);
-    console.log(json.status);
-    if(playingData == undefined || playingData != chunk){
-        fs.writeFile('playing.json', json);
-      };
-    });
-    // ファイルのダウンロードが終わるとendイベントが呼ばれる
-    res.on('end', function () {
-    });
+    res.setEncoding('utf8');
+    res.on('data', function (chunk) {
+      console.log("chunk" + chunk);
+      var json = xml2json.toJson(chunk);
+      var nowPlaying = JSON.parse(json);
+      console.log(nowPlaying);
+
+
+
+      var nowPlayingTitle = nowPlaying.status.source.title;
+      var currentTitle = playingData.status.source.title;
+      console.log(nowPlayingTitle == currentTitle);
+
+      if(currentTitle != nowPlayingTitle){
+          fs.writeFile('playing.json', json);
+          console.log('saved');
+        } else {
+          console.log(nowPlayingTitle);
+        };
+      });
+      res.on('end', function () {
+      });
   }).on('error', function (err) {
       console.log('Error: ', err); return;
   });
 }
-
-
 
 var io = require('socket.io').listen(app.listen(port));
 
@@ -54,7 +62,7 @@ io.sockets.on('connection', function (socket) {
     fs.watchFile('./playing.json', function(curr, prev) {
     // on file change we can read the new xml
       fs.readFile('./playing.json', function(err, data) {
-        console.log("hello");
+        console.log(json);
         if (err) throw err;
         // parsing the new xml data and converting them into json file
         var json = data;
