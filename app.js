@@ -7,7 +7,6 @@ var express = require('express'),
     fs = require('fs'),
     serializer = new (require('xmldom')).XMLSerializer,
     implementation = new (require('xmldom')).DOMImplementation,
-    bodyParser = require('body-parser'),
     port = 3700;
 
 var app = express();
@@ -22,7 +21,7 @@ app.use(express.static(path.join(__dirname,'public')));
 var rss;
 
 var document = implementation.createDocument('', '', null);
-document.appendChild(document.createElement('foo'));
+
 
 var req = http.get(url, function (res) {
 
@@ -34,10 +33,10 @@ var req = http.get(url, function (res) {
         console.log(xml);
         var json = xml2json.toJson(xml); //returns a string containing the JSON structure by default
         console.log(json);
-
+        document.appendChild(document.createElement(xml));
         fs.writeFile(
           "./playing.xml",
-          serializer.serializeToString(xml),
+          serializer.serializeToString(document),
           function(error) {
             if (error) {
               console.log(error);
