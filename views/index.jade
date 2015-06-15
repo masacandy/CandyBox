@@ -6,6 +6,14 @@ block title
     title cabdybox
 
 block content
+  script(src="/socket.io/socket.io.js")
+  script(src="/js/sample.js")
+  
+  h1 #{title} #{artist}
+  
+  
+  h1 てーすと
+  #content(style='width: 500px; height: 300px; margin: 0 0 20px 0; border: solid 1px #999; overflow-y: scroll;')
   .controls
     | Name: 
     input#name(style='width:350px;')
