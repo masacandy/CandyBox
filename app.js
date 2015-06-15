@@ -4,6 +4,7 @@ var express = require('express'),
     morgan = require('morgan'),
     xml2json = require('xml2json'),
     io = require('socket.io'),
+    bodyParser = require('body-parser'),
     fs = require('fs'),
     serializer = new (require('xmldom')).XMLSerializer,
     implementation = new (require('xmldom')).DOMImplementation,
@@ -18,50 +19,70 @@ app.set('view engine','jade');
 app.engine('jade', require('jade').__express);
 app.use(express.static(path.join(__dirname,'public')));
 
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+
 var rss;
 
 var document = implementation.createDocument('', '', null);
 
+var xml = '';
+var currentSong;
 
-var req = http.get(url, function (res) {
-
+function songReq () {
+   http.get(url, function (res) {
     // テキストファイルの場合は、エンコード指定は重要！
-    var xml = '';
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
-        xml += chunk;
-        console.log(xml);
-        var json = xml2json.toJson(xml); //returns a string containing the JSON structure by default
-        console.log(json);
-        document.appendChild(document.createElement(xml));
-        fs.writeFile(
-          "./playing.xml",
-          serializer.serializeToString(document),
-          function(error) {
-            if (error) {
-              console.log(error);
-            } else {
-              console.log("The file was saved!");
+      var json = xml2json.toJson(chunk);
+      console.log(json);
+      console.log(json.body);
+      if(currentSong != json){
+          currentSong = json;
+          //returns a string containing the JSON structure by default
+          document.appendChild(document.createElement(chunk));
+          fs.writeFile(
+            "./playing.xml",
+            serializer.serializeToString(document),
+            function(error) {
+              if (error) {
+                console.log(error);
+              } else {
+                console.log("The file was saved!");
+              }
             }
-          }
-        );
+          );
+        };
     });
     // ファイルのダウンロードが終わるとendイベントが呼ばれる
     res.on('end', function () {
     });
-});
+  }).on('error', function (err) {
+      console.log('Error: ', err); return;
+  });
+}
 
-
-// 通信エラーなどはここで処理する
-req.on('error', function (err) {
-    console.log('Error: ', err); return;
-});
+setInterval(songReq, 1000);
 
 
 var io = require('socket.io').listen(app.listen(port));
 
 io.sockets.on('connection', function (socket) {
-    socket.emit('message', { message: 'welcome to the chat' });
+    socket.emit('message', { message: 'welcome to the chat'});
+
+    fs.watchFile('./playing.xml', function(curr, prev) {
+    // on file change we can read the new xml
+      fs.readFile('./playing.xml', function(err, data) {
+        if (err) throw err;
+        // parsing the new xml data and converting them into json file
+        var json = xml2json.toJson(data);
+        console.log(json);
+        // send the new data to the client
+        socket.volatile.emit('notification', json);
+      });
+    });
+
     socket.on('send', function (data) {
         io.sockets.emit('message', data);
     });
@@ -70,5 +91,9 @@ io.sockets.on('connection', function (socket) {
 app.get('/', function(req, res) {
   res.render("index");
 });
+
+setInterval(function() {
+  songReq;
+}, 100);
 
 console.log("listening on port" + port);
