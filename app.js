@@ -24,29 +24,33 @@ app.use(bodyParser.urlencoded({extended: true}));
 
 
 
-var xml;
+var count = 0;
 function songReq () {
   //アクセスする
   http.get(url, function (res) {
     //エンコーディング指定
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
-
-      console.log(chunk);
-
+      //xmlファイルをjsonに変換
       var apiJson = xml2json.toJson(chunk);
-      var nowPlaying = JSON.parse(apiJson, 'utf-8');
-
+      var nowPlaying = JSON.parse(apiJson);
+      //なぜかstatus以下を持っていない時があったため（もしかしたらコールバックで解決？）
       if (nowPlaying.hasOwnProperty("status")) {
-
         var nowPlayingTitle = nowPlaying.status.source.title;
-        var currentTitle = playingData.status.source.title;
-
+        var currentTitle;
+        if (playingData.hasOwnProperty("status")){
+        currentTitle = playingData.status.source.title;
+        }
+        //apiから来た曲名と、こっちで保存してる曲名が違った場合に上書きする
         if(currentTitle != nowPlayingTitle){
-            fs.writeFile('playing.json', nowPlaying);
+          console.log(currentTitle, nowPlayingTitle);
+          console.log(count);
+          count++;
+          console.log("saving json", nowPlaying);
+            fs.writeFile('playing.json', JSON.stringify(nowPlaying));
             console.log('saved');
           } else {
-            console.log("now playing is " + nowPlayingTitle);
+            console.log("曲は変わってません");
           };
         } else {
           console.log("currently there's no party")
@@ -63,7 +67,7 @@ var io = require('socket.io').listen(app.listen(port));
 
 io.sockets.on('connection', function (socket) {
     socket.emit('message', { message: 'welcome to the chat'});
-
+    //変わったら通知する
     fs.watchFile('./playing.json', function(curr, prev) {
 
       socket.volatile.emit('notification', playingData);
