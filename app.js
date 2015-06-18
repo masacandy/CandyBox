@@ -10,7 +10,6 @@ var express = require('express'),
 var app = express();
 var server = http.Server(app);
 var io = require('socket.io')(server);
-
 server.listen(port);
 
 
@@ -69,7 +68,6 @@ io.sockets.on('connection', function (socket) {
 
     //変わったら通知する
     fs.watchFile('./playing.json', function(curr, prev) {
-
       console.log("song chaaaaaaanged");
       var playingData = JSON.parse(fs.readFileSync('./playing.json', 'utf8'));
       socket.emit('message', { message: JSON.stringify(playingData)});
