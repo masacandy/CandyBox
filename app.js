@@ -3,12 +3,18 @@ var express = require('express'),
     http = require('http'),
     morgan = require('morgan'),
     xml2json = new require('xml2json'),
-    io = require('socket.io'),
     bodyParser = require('body-parser'),
     fs = require('fs'),
     port = 3700;
 
 var app = express();
+var server = http.Server(app);
+var io = require('socket.io')(server);
+
+server.listen(port);
+
+
+
 var url = 'http://localhost:8000/';
 
 app.use(morgan('dev'));
@@ -22,15 +28,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 
-
-var count = 0;
 function songReq () {
   //アクセスする
   http.get(url, function (res) {
     //エンコーディング指定
     res.setEncoding('utf8');
     res.on('data', function (chunk) {
-      //xmlファイルをjsonに変換
+      //ダウンロードしたxmlファイルをjsonに変換
       var apiJson = xml2json.toJson(chunk);
       var nowPlaying = JSON.parse(apiJson);
       //なぜかstatus以下を持っていない時があったため（もしかしたらコールバックで解決？）
@@ -42,14 +46,13 @@ function songReq () {
         var currentTitle = playingData.status.source.title;
         //apiから来た曲名と、こっちで保存してる曲名が違った場合に上書きする
         if(currentTitle != nowPlayingTitle){
-          console.log(currentTitle, nowPlayingTitle);
-          //console.log("saving json", nowPlaying);
             fs.writeFile('playing.json', JSON.stringify(nowPlaying));
             console.log('saved');
           } else {
             console.log("曲は変わってません");
           };
         } else {
+          console.log(nowPlaying);
           console.log("currently there's no party")
         }
       });
@@ -60,14 +63,18 @@ function songReq () {
   });
 }
 
-var io = require('socket.io').listen(app.listen(port));
 
 io.sockets.on('connection', function (socket) {
-    socket.emit('message', { message: 'welcome to the chat'});
+    console.log("connected");
+
     //変わったら通知する
     fs.watchFile('./playing.json', function(curr, prev) {
 
-      socket.volatile.emit('notification', playingData);
+      console.log("song chaaaaaaanged");
+      var playingData = JSON.parse(fs.readFileSync('./playing.json', 'utf8'));
+      socket.emit('message', { message: JSON.stringify(playingData)});
+      console.log(playingData);
+      //socket.volatile.emit('notification', playingData);
     });
 
     socket.on('send', function (data) {
@@ -80,5 +87,5 @@ app.get('/', function(req, res) {
 });
 
 
-setInterval(songReq, 2000);
+setInterval(songReq, 1000);
 console.log("listening on port" + port);
