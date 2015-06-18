@@ -6,7 +6,6 @@ var express = require('express'),
     io = require('socket.io'),
     bodyParser = require('body-parser'),
     fs = require('fs'),
-    playingData = require('./playing.json'),
     port = 3700;
 
 var app = express();
@@ -37,16 +36,14 @@ function songReq () {
       //なぜかstatus以下を持っていない時があったため（もしかしたらコールバックで解決？）
       if (nowPlaying.hasOwnProperty("status")) {
         var nowPlayingTitle = nowPlaying.status.source.title;
-        var currentTitle;
-        if (playingData.hasOwnProperty("status")){
-        currentTitle = playingData.status.source.title;
-        }
+        //保存してある曲名を読み込む
+        var playingData = JSON.parse(fs.readFileSync('./playing.json', 'utf8'));
+        //保存してあるタイトル
+        var currentTitle = playingData.status.source.title;
         //apiから来た曲名と、こっちで保存してる曲名が違った場合に上書きする
         if(currentTitle != nowPlayingTitle){
           console.log(currentTitle, nowPlayingTitle);
-          console.log(count);
-          count++;
-          console.log("saving json", nowPlaying);
+          //console.log("saving json", nowPlaying);
             fs.writeFile('playing.json', JSON.stringify(nowPlaying));
             console.log('saved');
           } else {
