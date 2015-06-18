@@ -31,21 +31,22 @@ function songReq () {
   //アクセスする
   http.get(url, function (res) {
     //エンコーディング指定
-    res.setEncoding('utf8');
+    res.setEncoding('UTF-8');
     res.on('data', function (chunk) {
       //ダウンロードしたxmlファイルをjsonに変換
       var apiJson = xml2json.toJson(chunk);
-      var nowPlaying = JSON.parse(apiJson);
+      var nowPlaying = JSON.parse(apiJson, 'UTF-8');
+      console.log(nowPlaying);
       //なぜかstatus以下を持っていない時があったため（もしかしたらコールバックで解決？）
       if (nowPlaying.hasOwnProperty("status")) {
         var nowPlayingTitle = nowPlaying.status.source.title;
         //保存してある曲名を読み込む
-        var playingData = JSON.parse(fs.readFileSync('./playing.json', 'utf8'));
+        var playingData = JSON.parse(fs.readFileSync('./playing.json', 'UTF-8'));
         //保存してあるタイトル
         var currentTitle = playingData.status.source.title;
         //apiから来た曲名と、こっちで保存してる曲名が違った場合に上書きする
         if(currentTitle != nowPlayingTitle){
-            fs.writeFile('playing.json', JSON.stringify(nowPlaying));
+            fs.writeFile('playing.json', JSON.stringify(nowPlaying, 'UTF-8'));
             console.log('saved');
           } else {
             console.log("曲は変わってません");
@@ -65,16 +66,13 @@ function songReq () {
 
 io.sockets.on('connection', function (socket) {
     console.log("connected");
-
     //変わったら通知する
     fs.watchFile('./playing.json', function(curr, prev) {
       console.log("song chaaaaaaanged");
       var playingData = JSON.parse(fs.readFileSync('./playing.json', 'utf8'));
-      socket.emit('message', { message: JSON.stringify(playingData)});
-      console.log(playingData);
-      //socket.volatile.emit('notification', playingData);
+      socket.volatile.emit('notification', {'song':playingData.status.source.title,
+                                            'artist':playingData.status.source.artist});
     });
-
     socket.on('send', function (data) {
         io.sockets.emit('message', data);
     });

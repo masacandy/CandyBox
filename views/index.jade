@@ -8,12 +8,33 @@ block title
 block content
   script(src="/socket.io/socket.io.js")
   script(src="/js/sample.js")
+  header
+    .container.navbar-container
+      nav.navbar.navbar-findcond.navbar-fixed-top
+        .container.navbar-background
+          .navbar-header
+            button.navbar-toggle.collapsed(type="button" data-toggle="collapse" data-target="#navbar")
+              span.sr-only Toggle navigation
+              span.icon-bar
+              span.icon-bar
+              span.icon-bar
+          .collapse.navbar-collapse#navbar
+            ul.nav.navbar-nav.navbar-right.white-color(role="tablist")
+              li
+                a(href="about.html") about
+              li
+                a(href="#") blog
+                
+  section.art-work
   
-  h1 #{title} #{artist}
+  section.song-data
+    .container.text-center
+      .song-title
+        p.song Song title will be here
+      .artist-name
+        p.artist Artist name will be here
   
-  
-  h1 CANDYBOX
-  #content(style='width: 500px; height: 300px; margin: 0 0 20px 0; border: solid 1px #999; overflow-y: scroll;')
+  //#content(style='width: 500px; height: 300px; margin: 0 0 20px 0; border: solid 1px #999; overflow-y: scroll;')
   //- .controls
   //-   | Name: 
   //-   input#name(style='width:350px;')
