@@ -20,7 +20,7 @@ app.use(morgan('dev'));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine','jade');
 app.engine('jade', require('jade').__express);
-app.use(express.static(path.join(__dirname,'public')));
+app.use(express.static('public'));
 
 
 app.use(bodyParser.json());
@@ -49,7 +49,7 @@ function songReq () {
             fs.writeFile('playing.json', JSON.stringify(nowPlaying, 'UTF-8'));
             console.log('saved');
           } else {
-            console.log("曲は変わってません");
+            console.log("Keep Dancing With This Song");
           };
         } else {
           console.log(nowPlaying);
