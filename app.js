@@ -31,6 +31,9 @@ function songReq () {
   //アクセスする
   http.get(url, function (res) {
     //エンコーディング指定
+    if(err) {
+      console.log("DJ JAMES is not playing");
+    }
     res.setEncoding('UTF-8');
     res.on('data', function (chunk) {
       //ダウンロードしたxmlファイルをjsonに変換
