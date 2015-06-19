@@ -83,5 +83,5 @@ app.get('/', function(req, res) {
 });
 
 
-setInterval(songReq, 1000);
+setInterval(songReq, 100);
 console.log("listening on port" + port);
