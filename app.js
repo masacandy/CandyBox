@@ -33,9 +33,14 @@ io.sockets.on('connection', function (socket) {
     console.log("connected");
 
     //var playingData = JSON.parse(fs.readFileSync('./playing.json', 'UTF-8'));
-    socket.on('send', function (data) {
+  socket.on('send', function (data) {
        io.sockets.emit('request', data);
-   });
+  });
+
+  socket.on('judge', function (data) {
+    console.log(data);
+     io.sockets.emit('judge', data);
+ });
 
 });
 

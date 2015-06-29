@@ -31,9 +31,9 @@ block title
           .row
             ul.judge-button-box
               li.like-button.judge-button
-                btn.btn.btn-primary(type="button") like
+                btn#likeButton.btn.btn-primary(type="button" data-judge="1") like
               li.dislike-button.judge-button
-                btn.btn.btn-danger(type="button") dislike
+                btn#disButton.btn.btn-danger(type="button" data-judge="1") dislike
               
     section.request-message
       .container
