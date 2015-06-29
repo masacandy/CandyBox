@@ -27,14 +27,15 @@ io.sockets.on('connection', function (socket) {
     console.log("connected");
 
     //var playingData = JSON.parse(fs.readFileSync('./playing.json', 'UTF-8'));
-
-    //io.sockets.emit('send', {'song':playingData.song, 'artist':playingData.artist});
+    socket.on('send', function (data) {
+       io.sockets.emit('request', data);
+   });
 
 });
 
 
 io.sockets.on('save', function(data) {
-  console.log("insideif");
+  //console.log("insideif");
   //fs.writeFile('playing.json', JSON.stringify(data, 'UTF-8'));
 });
 
@@ -44,13 +45,14 @@ app.get('/', function(req, res) {
   res.render("index");
 });
 
+app.get('/djview', function(req, res) {
+  res.render("djview");
+})
+
 app.post('/songinfo', function(req, res) {
   var data = req.body;
-  console.log("insideif");
-
   io.sockets.emit('save', data);
-  console.log(data.song);
-  io.sockets.emit('send', {'song':data.song,
+  io.sockets.emit('sendApi', {'song':data.song,
                                       'artist':data.artist});
 });
 

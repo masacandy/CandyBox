@@ -12,22 +12,34 @@ block title
       .container
         .logo-area
           | CandyBox
-                  
+
     section.art-work
       .art-work-wrapper
         .text-center.container-400
           img(src="/images/nowplaying.jpg")
+    
     section.song-data
       .container.text-center
         .song-title
           p.song Song title will be here
         .artist-name
           p.artist Artist's name will be here
-    
-    //#content(style='width: 500px; height: 300px; margin: 0 0 20px 0; border: solid 1px #999; overflow-y: scroll;')
-    //- .controls
-    //-   | Name: 
-    //-   input#name(style='width:350px;')
-    //-   br
-    //-   input#field(style='width:350px;')
-    //-   input#send(type='button', value='send')
+          
+    section
+      .container
+        .btn-box.text-center
+          .row
+            ul.judge-button-box
+              li.like-button.judge-button
+                btn.btn.btn-primary(type="button") like
+              li.dislike-button.judge-button
+                btn.btn.btn-danger(type="button") dislike
+              
+    section.request-message
+      .container
+        form
+          .form-group
+            label(for="requestForm") Your Request Song 
+            input.form-control(type="text" id="requestForm" placeholder="Song / Artist")
+          
+          button.btn.btn-default#request.requestBtn(value="send") Request

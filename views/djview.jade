@@ -1,0 +1,16 @@
+extends layout
+
+block title
+    title cabdybox
+
+  block content
+    script(src="/socket.io/socket.io.js")
+    script(src="/js/djview.js")
+    header.navbar-fixed-top
+      .container
+        .logo-area
+          | CandyBox
+          
+    section#communicate-box
+      .container
+        #content(style='height:150px; border: solid 1px #999; overflow-y: scroll;')
