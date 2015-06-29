@@ -8,6 +8,7 @@ block title
   block content
     script(src="/socket.io/socket.io.js")
     script(src="/js/sample.js")
+    script(src="/js/sensor.js")
     header.navbar-fixed-top
       .container
         .header-wrapper
@@ -18,6 +19,7 @@ block title
               span.glyphicon.glyphicon-heart
             button.btn.btn-default#request
               span.glyphicon.glyphicon-envelope
+          .clear
     .request-message#requestDiv
       .container
         form
@@ -33,7 +35,8 @@ block title
             th Song
             th Artist
           tbody#list
-        btn.btn.btn-danger#deleteHistory(type="button") Clear History
+        .text-center
+          btn.btn.btn-danger#deleteHistory(type="button") Clear History
           
           
 
