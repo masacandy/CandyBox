@@ -6,6 +6,7 @@ var express = require('express'),
     xml2json = new require('xml2json'),
     bodyParser = require('body-parser'),
     fs = require('fs'),
+    basicAuth = require('basic-auth-connect'),
     port = 3700;
 
 var app = express();
@@ -23,6 +24,11 @@ app.use(express.static('public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+app.all('/djview', basicAuth(function(user, password) {
+  return user === 'James' && password === 'candyboxtest';
+}));
+
+
 io.sockets.on('connection', function (socket) {
     console.log("connected");
 
@@ -35,9 +41,10 @@ io.sockets.on('connection', function (socket) {
 
 
 io.sockets.on('save', function(data) {
-  //console.log("insideif");
-  //fs.writeFile('playing.json', JSON.stringify(data, 'UTF-8'));
+  console.log("insideif");
+  fs.writeFile('./songData.json', JSON.stringify(data, 'UTF-8'));
 });
+
 
 
 
@@ -49,11 +56,16 @@ app.get('/djview', function(req, res) {
   res.render("djview");
 })
 
+
+
 app.post('/songinfo', function(req, res) {
   var data = req.body;
-  io.sockets.emit('save', data);
-  io.sockets.emit('sendApi', {'song':data.song,
-                                      'artist':data.artist});
+  if(data) {
+    res.sendStatus(200);
+    io.sockets.emit('save', data);
+    io.sockets.emit('sendApi', {'song':data.song,
+                                        'artist':data.artist});
+  }
 });
 
 console.log("listening on port" + port);

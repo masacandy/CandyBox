@@ -10,6 +10,3 @@ I'm stick to the situation that this app will be used in the club or some festiv
 Real-Time feature is the key of this app.
 
 Also I need to put more function that can communicate with DJ and audience.(ex. put "like", "dislike" button and DJ can know how people reacting right now)
-
-# TODO
-Don't lean on the Traktor-SongNameServer and make my own API server to show the song info faster for client and make my own iOS App.
