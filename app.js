@@ -7,6 +7,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     fs = require('fs'),
     basicAuth = require('basic-auth-connect'),
+    getItunes = require('./getItunes'),
     port = 3700;
 
 var app = express();
@@ -28,6 +29,37 @@ app.all('/djview', basicAuth(function(user, password) {
   return user === 'James' && password === 'candyboxtest';
 }));
 
+app.get('/', function(req, res) {
+  res.render("index");
+});
+
+app.get('/djview', function(req, res) {
+  res.render("djview");
+});
+
+app.post('/songinfo', function(req, res) {
+  var data = req.body;
+  if(data) {
+    var itunesData;
+    res.sendStatus(200);
+    io.sockets.emit('save', data);
+    io.sockets.emit('sendApi', {'song':data.song,
+                                'artist':data.artist});
+
+    function defineItunes (data) {
+      return getItunes.getItunes(data);
+    }
+
+    var preloadPromise = defineItunes(data);
+    if (preloadPromise) {
+      preloadPromise.done(function(preloadPromise) {
+      console.log("test");
+      io.sockets.emit('sendItunes', itunesData);
+      });
+    }
+  }
+});
+
 
 io.sockets.on('connection', function (socket) {
     console.log("connected");
@@ -46,31 +78,12 @@ io.sockets.on('connection', function (socket) {
 
 
 io.sockets.on('save', function(data) {
-  console.log("insideif");
   fs.writeFile('./songData.json', JSON.stringify(data, 'UTF-8'));
 });
 
-
-
-
-app.get('/', function(req, res) {
-  res.render("index");
+io.sockets.on('dancing', function(data) {
+  io.sockets.emit('dancing');
 });
 
-app.get('/djview', function(req, res) {
-  res.render("djview");
-})
-
-
-
-app.post('/songinfo', function(req, res) {
-  var data = req.body;
-  if(data) {
-    res.sendStatus(200);
-    io.sockets.emit('save', data);
-    io.sockets.emit('sendApi', {'song':data.song,
-                                        'artist':data.artist});
-  }
-});
 
 console.log("listening on port" + port);

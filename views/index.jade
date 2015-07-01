@@ -3,7 +3,7 @@ extends layout
 
 
 block title
-    title cabdybox
+    title CandyBox
 
   block content
     script(src="/socket.io/socket.io.js")
@@ -40,10 +40,11 @@ block title
           
           
 
-    section.art-work
+    section#art-work
       .art-work-wrapper
         .text-center.container-400
-          img(src="/images/nowplaying.jpg")
+          .artwork
+            img(src="/images/nowplaying.jpg")
     
     section.song-data
       .container.text-center
