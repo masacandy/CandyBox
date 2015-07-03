@@ -40,26 +40,19 @@ app.get('/djview', function(req, res) {
 app.post('/songinfo', function(req, res) {
   var data = req.body;
   if(data) {
-    var itunesData;
     res.sendStatus(200);
     io.sockets.emit('save', data);
     io.sockets.emit('sendApi', {'song':data.song,
                                 'artist':data.artist});
+    getItunes.getItunes(data, emitItunesData);
 
-    function defineItunes (data) {
-      return getItunes.getItunes(data);
-    }
-
-    var preloadPromise = defineItunes(data);
-    if (preloadPromise) {
-      preloadPromise.done(function(preloadPromise) {
-      console.log("test");
-      io.sockets.emit('sendItunes', itunesData);
-      });
-    }
   }
 });
 
+var emitItunesData = function (itunesData) {
+  console.log("itunesData", itunesData);
+  io.sockets.emit('sendItunes', itunesData);
+}
 
 io.sockets.on('connection', function (socket) {
     console.log("connected");

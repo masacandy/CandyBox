@@ -8,10 +8,10 @@ body {
 header {
   font-weight: bold;
 }
-.art-work {
+#art-work {
   text-align: center;
 }
-.art-work img {
+#art-work img {
   width: 100%;
 }
 .art-work-wrapper {
