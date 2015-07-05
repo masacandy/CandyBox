@@ -9,7 +9,8 @@ block title
     script(src="/socket.io/socket.io.js")
     script(src="/js/sample.js")
     script(src="/js/sensor.js")
-    header.navbar-fixed-top
+    script(src="/js/Vague.js")
+    header.navbar
       .container
         .header-wrapper
           .logo-area
@@ -17,16 +18,6 @@ block title
           .header-button-box
             button.btn.btn-default#history
               span.glyphicon.glyphicon-heart
-            button.btn.btn-default#request
-              span.glyphicon.glyphicon-envelope
-          .clear
-    .request-message#requestDiv
-      .container
-        form
-          .form-group
-            label(for="requestForm") Your Requesting Song 
-            input.form-control(type="text" id="requestForm" placeholder="Song / Artist")
-          button.btn.btn-default#goRequest.requestBtn(value="send") Request
 
     .liked-history#historyDiv
       .container
@@ -41,13 +32,14 @@ block title
           
 
     section#art-work
-      .art-work-wrapper
-        .text-center.container-400
-          .artwork
-            img(src="/images/nowplaying.jpg")
+      #art-work-wrapper
+        .text-center
     
     section.song-data
       .container.text-center
+        .container-100
+          .artwork
+            img#artworkSrc(src="/images/nowplaying.jpg")
         #songTitle
           | Song title will be here
         #artistName
@@ -64,3 +56,11 @@ block title
               li.dislike-button.judge-button
                 btn#disButton.btn.btn-danger(type="button" data-judge="1")
                   span.glyphicon.glyphicon-thumbs-down
+
+    .request-message#requestDiv
+      .container
+        form
+          .form-group
+            label(for="requestForm") Your Requesting Song 
+            input.form-control(type="text" id="requestForm" placeholder="Song / Artist")
+          button.btn.btn-default#goRequest.requestBtn(value="send") Request

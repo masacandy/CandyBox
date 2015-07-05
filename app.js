@@ -44,15 +44,16 @@ app.post('/songinfo', function(req, res) {
     io.sockets.emit('save', data);
     io.sockets.emit('sendApi', {'song':data.song,
                                 'artist':data.artist});
+
+    var emitItunesData = function (itunesData) {
+      io.sockets.emit('sendItunes', itunesData);
+    }
     getItunes.getItunes(data, emitItunesData);
 
   }
 });
 
-var emitItunesData = function (itunesData) {
-  console.log("itunesData", itunesData);
-  io.sockets.emit('sendItunes', itunesData);
-}
+
 
 io.sockets.on('connection', function (socket) {
     console.log("connected");

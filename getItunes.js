@@ -25,7 +25,22 @@ module.exports.getItunes = function(req, callback) {
       });
 
       res.on('end', function(res){
-        var itunesData = JSON.parse(body);
+        var isJSON = function(arg) {
+    arg = (typeof arg === "function") ? arg() : arg;
+    if (typeof arg  !== "string") {
+        return false;
+    }
+    try {
+    arg = (!JSON) ? eval("(" + arg + ")") : JSON.parse(arg);
+        return true;
+    } catch (e) {
+        return false;
+    }
+    }
+
+
+        var itunesData = body;
+        console.log(isJSON(itunesData));
         callback(itunesData, app.emitItunesData);
       });
 

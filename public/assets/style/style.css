@@ -1,9 +1,8 @@
 body {
-  padding-top: 78px;
+  /*padding-top: 78px;*/
 }
 .all-contents {
-  background-color: #444;
-  color: #fff;
+
 }
 header {
   font-weight: bold;
@@ -14,11 +13,15 @@ header {
 #art-work img {
   width: 100%;
 }
-.art-work-wrapper {
+#art-work-wrapper {
   width: 100%;
+  height: 350px;
+  background-image: url("/images/nowplaying.jpg");
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
-.container-400 {
-  max-width: 400px;
+.container-100 {
+  width: 100px;
   margin: auto;
 }
 .logo-area {
@@ -49,17 +52,42 @@ header {
 }
 .judge-button-box {
   -webkit-padding-start: 0;
-}
-#requestDiv {
-  display: none;
+  margin-top: -124px;
+
 }
 #historyDiv {
   display: none;
+  margin-bottom: 40px;
 }
+#requestDiv {
+  margin-left: 32px;
+  margin-top: -56px;
+}
+
 .header-button-box {
   margin-top: 9px;
   float: right;
 }
 #request {
   margin-left: 16px;
+}
+
+.song-data {
+  color: white;
+  position: relative;
+  top: -250px;
+}
+
+#artworkSrc {
+  width: 100%;
+}
+
+#artistName {
+  margin-top: 16px;
+}
+
+#songTitle {
+  margin-top: 24px;
+  font-size: 20px;
+  font-weight: bold;
 }
