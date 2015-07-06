@@ -1,18 +1,18 @@
 extends layout
 
 block title
-    title cabdybox
+    title CandyBox DJ View
 
   block content
     script(src="/socket.io/socket.io.js")
     script(src="/js/djview.js")
-    header.navbar-fixed-top
+    header.navbar
       .container
         .logo-area
           | CandyBox
           
-    section#start-button.text-center
-      btn.btn.btn-default(type="button") Start the party
+    //- section#start-button.text-center
+    //-   btn.btn.btn-default(type="button") Start the party
     
     section#communicate-box
       .container
