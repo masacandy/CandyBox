@@ -41,7 +41,7 @@ app.post('/songinfo', function(req, res) {
   var data = req.body;
   if(data) {
     res.sendStatus(200);
-    io.sockets.emit('save', data);
+    fs.writeFile('./songData.json', JSON.stringify(data, 'UTF-8'));
     io.sockets.emit('sendApi', {'song':data.song,
                                 'artist':data.artist});
 
@@ -58,7 +58,8 @@ app.post('/songinfo', function(req, res) {
 io.sockets.on('connection', function (socket) {
     console.log("connected");
 
-    //var playingData = JSON.parse(fs.readFileSync('./playing.json', 'UTF-8'));
+  io.sockets.emit('newAudience');
+
   socket.on('send', function (data) {
        io.sockets.emit('request', data);
   });
@@ -68,16 +69,18 @@ io.sockets.on('connection', function (socket) {
      io.sockets.emit('judge', data);
  });
 
-});
+  socket.on('sendLikes', function(data) {
+   io.sockets.emit('sendLikes', data);
+   console.log("got it");
+ });
 
 
-io.sockets.on('save', function(data) {
-  fs.writeFile('./songData.json', JSON.stringify(data, 'UTF-8'));
 });
 
 io.sockets.on('dancing', function(data) {
   io.sockets.emit('dancing');
 });
+
 
 
 console.log("listening on port" + port);

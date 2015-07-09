@@ -6,6 +6,7 @@ block title
   block content
     script(src="/socket.io/socket.io.js")
     script(src="/js/djview.js")
+    script(src="/js/underscore-min.js")
     header.navbar
       .container
         .logo-area
@@ -33,3 +34,7 @@ block title
           p dacing
           #danceDiv
             p 0
+    
+    section#audienceLikes
+      .container
+        #likedlist
