@@ -65,19 +65,16 @@ io.sockets.on('connection', function (socket) {
   });
 
   socket.on('judge', function (data) {
-    console.log(data);
      io.sockets.emit('judge', data);
  });
 
   socket.on('sendLikes', function(data) {
    io.sockets.emit('sendLikes', data);
-   console.log("got it");
- });
+  });
 
  socket.on('dancing', function(data) {
  io.sockets.emit('dancing');
- console.log('danced');
-});
+ });
 
 
 });

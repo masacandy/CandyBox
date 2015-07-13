@@ -1,6 +1,6 @@
 window.onload = function() {
     //TODO開発用、環境によって変える
-    var localhostNumber = '192.168.0.2:3700';
+    var localhostNumber = '192.168.11.101:3700';
     var socket = io.connect(localhostNumber);
     var goRequestButton = document.getElementById("goRequest");
     var requestForm = document.getElementById("requestForm");
@@ -68,7 +68,6 @@ window.onload = function() {
          tr.appendChild(td2);
          td1.innerHTML = _key;
          td2.innerHTML = storage.getItem(_key);
-         console.log(storage);
        }
      } else {
        var div = document.createElement("div");
@@ -83,7 +82,6 @@ window.onload = function() {
             alert("It's blank!");
         } else {
             var requestText = requestForm.value;
-            console.log("got request");
             socket.emit('send', {request: requestText});
             requestForm.value = "";
             return false;
@@ -125,13 +123,12 @@ window.onload = function() {
             alert("It's strange");
         } else {
             var dis = $('#disButton').data('judge');
-            socket.emit('judge', {dis: dis});
+            socket.emit('judge', {dis: dis, song:songTitle.innerText});
         }
     };
 
 
     socket.on('sendApi', function (data) {
-      console.log(data.song);
       $('#songTitle').html(data.song);
       if(data.artist){
         $('#artistName').html(data.artist);
@@ -143,7 +140,6 @@ window.onload = function() {
     socket.on('sendItunes', function(data) {
       var itunesData = JSON.parse(data);
       if(itunesData.results[0]) {
-        console.log(itunesData.results);
         var artworkURL = itunesData.results[0].artworkUrl100;
         artwork.src = artworkURL;
         backgroundCover.style.backgroundImage = "url( " + artworkURL + " )";
