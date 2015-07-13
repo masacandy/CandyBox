@@ -51,10 +51,12 @@ header {
 #historyDiv {
   display: none;
   margin-bottom: 40px;
+  color: #fff;
 }
 #requestDiv {
   margin-left: 32px;
   margin-top: -88px;
+  color: #fff;
 }
 .header-button-box {
   margin-top: 9px;
@@ -84,4 +86,14 @@ header {
 }
 #judge-section {
   margin-top: -200px;
+}
+#audience-view {
+  background-color: #000;
+  min-height: 100vh;
+}
+#dj-view {
+  background-color: #fff;
+}
+.audience-color {
+  color: #fff;
 }

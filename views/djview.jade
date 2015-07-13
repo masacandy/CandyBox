@@ -7,35 +7,36 @@ block title
     script(src="/socket.io/socket.io.js")
     script(src="/js/djview.js")
     script(src="/js/underscore-min.js")
-    header.navbar
-      .container
-        .logo-area
-          | CandyBox
+    #dj-view
+      header.navbar
+        .container
+          .logo-area
+            | CandyBox
+      
+      section#communicate-box
+        .container
+          #content(style='height:150px; border: solid 1px #999; overflow-y: scroll;')
+      
+      section#alikes-box
+        .container
+          #content(style='height:150px; border: solid 1px #999; overflow-y: scroll;')
+      
+      section#judge-view
+        .container
+          .likes
+            p likes
+            #likeDiv
+              p 0
+          .dislikes
+            p dislikes
+            #disDiv
+              p 0
     
-    section#communicate-box
-      .container
-        #content(style='height:150px; border: solid 1px #999; overflow-y: scroll;')
-    
-    section#alikes-box
-      .container
-        #content(style='height:150px; border: solid 1px #999; overflow-y: scroll;')
-    
-    section#judge-view
-      .container
-        .likes
-          p likes
-          #likeDiv
-            p 0
-        .dislikes
-          p dislikes
-          #disDiv
-            p 0
-  
-        .dance
-          p dacing
-          #danceDiv
-            p 0
-    
-    section#audienceLikes
-      .container
-        #likedlist
+          .dance
+            p dacing
+            #danceDiv
+              p 0
+      
+      section#audienceLikes
+        .container
+          #likedlist
