@@ -1,7 +1,7 @@
 window.onload = function() {
 
     //TODO開発用、環境によって変える
-    var localhostNumber = '192.168.0.3:3700';
+    var localhostNumber = '192.168.0.2:3700';
     var socket = io.connect(localhostNumber);
     var goRequestButton = document.getElementById("goRequest");
     var requestForm = document.getElementById("requestForm");

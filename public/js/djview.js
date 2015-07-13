@@ -3,7 +3,7 @@
 window.onload = function() {
 
   var innerContents = [];
-  var localhostNumber = '192.168.0.3:3700';
+  var localhostNumber = '192.168.0.2:3700';
   var socket = io.connect(localhostNumber);
   var content = document.getElementById("content");
   var likeStatus = 0;
