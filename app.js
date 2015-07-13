@@ -74,12 +74,15 @@ io.sockets.on('connection', function (socket) {
    console.log("got it");
  });
 
+ socket.on('dancing', function(data) {
+ io.sockets.emit('dancing');
+ console.log('danced');
+});
+
 
 });
 
-io.sockets.on('dancing', function(data) {
-  io.sockets.emit('dancing');
-});
+
 
 
 

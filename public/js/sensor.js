@@ -7,10 +7,12 @@ function motion(event) {
   var localhostNumber = '192.168.0.2:3700';
   var socket = io.connect(localhostNumber);
 
-  if (Math.abs(x) > 50 || Math.abs(y) > 50 || Math.abs(z) > 50 )
+  if (Math.abs(x) > 30 || Math.abs(y) > 30 || Math.abs(z) > 30 )
     {
         socket.emit('dancing');
+        console.log('here');
     }
+    console.log("started");
 
 }
 
