@@ -36,15 +36,40 @@ window.onload = function() {
       }
     }
     if(temp.length){
-      likedSongs = temp;
+      for(var i in temp){
+        if(!_.findWhere(likedSongs, {"title":data[i].song})){
+          likedSongs.push(temp[i]);
+        }
+      }
     }
-
     console.log(likedSongs);
-    for(var i in likedSongs){
-      var append = document.createElement("song");
-      append.innerHTML = likedSongs[i].title, likedSongs[i].count;
-      likedlist.appendChild(append);
+    var sort_by = function(field, reverse, primer){
+   reverse = (reverse) ? -1 : 1;
+   return function(a,b){
+       a = a[field];
+       b = b[field];
+       if (typeof(primer) != 'undefined'){
+           a = primer(a);
+           b = primer(b);
+       }
+       if (a<b) return reverse * -1;
+       if (a>b) return reverse * 1;
+       return 0;
+   }
     }
+    // var toShowLiked = []
+    // toShowLiked.push(likedSongs);
+
+    likedSongs.sort(sort_by('count', true, parseInt));
+    console.log(likedSongs);
+    var html = '';
+    for(var i=0; i<likedSongs.length; i++) {
+        html += '<b>' + ('count') + ': </b>'+ likedSongs[i].count + '<br />';
+        html += '<b>' + ('songs') + ': </b>';
+        html += likedSongs[i].title + '<br />';
+   }
+    likedlist.innerHTML = html;
+
   });
 
   socket.on('newAudience', function(){

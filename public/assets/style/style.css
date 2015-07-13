@@ -87,6 +87,9 @@ header {
 #judge-section {
   margin-top: -200px;
 }
+#alikes-box {
+  margin-top: 16px;
+}
 #audience-view {
   background-color: #000;
   min-height: 100vh;
